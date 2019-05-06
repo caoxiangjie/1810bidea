@@ -36,4 +36,9 @@ public class PageController {
     public String tolog(){
         return "log";
     }
+      @RequestMapping("test")
+    public String test(){
+        return "test1111111";
+    }
+    
 }
