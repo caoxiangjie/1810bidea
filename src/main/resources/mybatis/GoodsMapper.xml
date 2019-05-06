@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jk.xys.dao.GoodsDao">
+    <select id="queryNavByPid" parameterType="int" resultType="com.jk.xys.pojo.NavBean">
+        select * from  jk_tree where pid=#{value}
+    </select>
+    <select id="queryCount" resultType="int">
+        select  count(1) from t_goods
+    </select>
+    <select id="queryGoods" resultType="com.jk.xys.pojo.GoodsBean">
+        select * from  t_goods g GROUP BY g.id LIMIT #{start},#{rows}
+    </select>
+    <update id="updateCommentsCount" >
+        update t_goods g set g.goodsCount=#{count} where g.id = #{goodsId}
+    </update>
+</mapper>

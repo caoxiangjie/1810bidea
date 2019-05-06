@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Title</title>
+</head>
+<body>
+<div class="container-fluid">
+    <form id="bookForm" class="form-horizontal">
+        <input type="hidden"   name="goodsId" th:value="${id}">
+        <div class="form-group">
+            <label for="goodsName" class="col-sm-2 control-label">评论内容</label>
+            <div class="col-sm-4">
+                <input type="text"  name="comments" class="form-control">
+            </div>
+            <label for="priceId" class="col-sm-2 control-label">评论人</label>
+            <div class="col-sm-4">
+                <input type="text"  name="commentsName" class="form-control">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="bookType" class="col-sm-2 control-label">评论星</label>
+            <div class="col-sm-4">
+                <input type="checkbox" name="commentsStars" value="1">
+                <input type="checkbox" name="commentsStars" value="2">
+                <input type="checkbox" name="commentsStars" value="3">
+                <input type="checkbox" name="commentsStars" value="4">
+                <input type="checkbox" name="commentsStars" value="5">
+            </div>
+        </div>
+        <label for="createTimeId" class="col-sm-2 control-label">评论等级</label>
+        <div class="col-sm-4">
+            <input type="radio" name="commentsLevel" value="1">差
+            <input type="radio" name="commentsLevel" value="2">一般
+            <input type="radio" name="commentsLevel" value="3">好
+        </div>
+        </div>
+
+    </form>
+</div>
+</body>
+
+</html>

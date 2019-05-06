@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    name: mysql
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/1810b
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    application:
+       name: serviceconsumer
+
+  dubbo:
+    application:
+      name: login_consumer
+    registry:
+      address: zookeeper://127.0.0.1:2181
+    scan: com.jk.xys.service
+
+
+
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/1810b
+  aop:
+    proxy-target-class: false
+
+mybatis:
+  mapperLocations: classpath*:mybatis/*Mapper.xml
+
+  redis:
+     host=127.0.0.1
+     port=6379
+     pass=
+     maxIdle=300
+     maxActive=600
+     maxWait=1000
+     testOnBorrow=true
+server:
+  port: 8081

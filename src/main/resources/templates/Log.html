@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/easyui1.5/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/bootstrap3/css/bootstrap.css">
+    <script src="/bootstrap3/js/bootstrap.js"></script>
+
+    <link rel="stylesheet" href="/bootstrap-table/bootstrap-table.css">
+    <script src="/bootstrap-table/bootstrap-table.js"></script>
+
+    <script src="/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+
+    <link rel="stylesheet" href="/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css">
+    <script src="/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="/bootbox/bootbox.all.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<div class="container-fluid" id="LogTable"></div>
+</body>
+<script type="text/javascript">
+    $(function(){
+        initLogTable();
+    })
+    function initLogTable(){
+        $("#LogTable").bootstrapTable({
+            url:"/goods/queryLog.do",
+            toolbar:"#toolbar",
+            pagination:true,
+            pageList:[5, 10, 20, 50],
+            pageNumber:1,
+            pageSize:5,
+            sidePagination:'server',
+            striped:true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,
+            clickToSelect:true,
+            showToggle:true,
+            detailView: false,
+            queryParams:function(){
+
+                return {
+                    page: this.pageNumber,
+                    rows: this.pageSize,
+
+                };
+            },
+
+            columns:[
+                {checkbox:true},
+                {field:"id",title:"编号"},
+                {field:"className",title:"类名"},
+                {field:"methodName",title:"方法名"},
+                {field:"params",title:"参数"},
+                {field:"responseBody",title:"返回值"},
+                {field:"createTime",title:"时间"},
+            ]
+        })
+    }
+
+</script>
+</html>

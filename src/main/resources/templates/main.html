@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/js/easyui1.5/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/bootstrap3/css/bootstrap.css">
+    <script src="/bootstrap3/js/bootstrap.js"></script>
+
+    <link rel="stylesheet" href="/bootstrap-table/bootstrap-table.css">
+    <script src="/bootstrap-table/bootstrap-table.js"></script>
+
+    <script src="/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+
+    <link rel="stylesheet" href="/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css">
+    <script src="/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="/bootbox/bootbox.all.min.js"></script>
+
+    <title>Title</title>
+
+
+
+</head>
+<body>
+<div id="toolbar">
+    <div class="form-group">
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <label>评论内容</label>
+                <input type="text" class="form-control" id="comments">
+                <label>最早时间</label>
+                <input type="text" class="form-control date" id="startTime">
+                <label>最晚时间</label>
+                <input type="text" class="form-control date" id="endTime">
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-info" onclick="serche()">搜索</button>
+</div>
+<div class="container-fluid" id="mydiv">
+    <table id="myTable"></table>
+</div>
+<div class="container-fluid" id="commentsTable"></div>
+</body>
+<script type="text/javascript">
+    $(function(){
+        initMytable();
+    })
+    function initMytable(){
+        $("#toolbar").hide();
+        $("#myTable").bootstrapTable({
+            url:"/goods/queryGoods.do",
+            pagination:true,
+            pageList:[5, 10, 20, 50],
+            pageNumber:1,
+            pageSize:5,
+            sidePagination:'server',
+            striped:true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,
+            clickToSelect:true,
+            showToggle:true,
+            detailView: false,
+            queryParams:function(){
+
+
+                return {
+                    page: this.pageNumber,
+                    rows: this.pageSize,
+
+
+                };
+            },
+            onDblClickCell: function (field, value,row,td) {
+                var id=row.id
+                alert(id)
+                var  url="/page/toComments?id="+id;
+                var dialog = bootbox.dialog({
+                    title: '添加评论',
+                    message:createAddContent(url),
+                    size: 'large',
+                    buttons: {
+                        //alert(1);
+                        cancel: {
+                            label: "关闭",
+                            className: 'btn-danger',
+                            callback: function(){
+                                console.log('Custom cancel clicked');
+                            }
+                        },
+                        ok: {
+                            label: "保存",
+                            className: 'btn-info',
+                            callback: function(){
+                                $.ajax({
+                                    url:'/goods/addComments',
+                                    type:'post',
+                                    data:$("#bookForm").serialize(),
+                                    dataType:'json',
+                                    success:function(data){
+                                        if(data){
+                                            $('#myTable').bootstrapTable('refresh');
+                                            bootbox.alert({
+                                                size:"small",
+                                                title:'提示',
+                                                message:"评论成功"
+                                            });
+
+                                        }else{
+                                            bootbox.alert({
+                                                size:"small",
+                                                title:'提示',
+                                                message:"新增失败"
+                                            });
+                                        }
+                                    }
+                                })
+
+                            }
+                        }
+                    }
+                });
+// alert(4);
+            },
+            columns:[
+                {checkbox:true},
+                {field:'id',title:'ID'},
+                {field:'name',title:'商品名称'},
+                {field:'goodsCount',title:'评论数量'},
+                {field:'img',title:'商品图片',formatter:function(value,row,index){
+                        return "<img src=../"+value+" width='50' height='50'>"
+                    }},
+                {field:'111',title:'操作',formatter:function(value,row,index){
+                        return "<a href= javascript:queryById('"+row.id+"');>查看评论</a>"
+                    }}
+            ]
+        })
+    }
+    function createAddContent(url){
+        $.ajax({
+            url:url,
+            async:false,
+            success:function(data){
+                res = data;
+            }
+        });
+        return res;
+    }
+
+    function  queryById(id) {
+         $("#mydiv").hide();
+        $("#toolbar").show();
+        $("#commentsTable").bootstrapTable({
+            url:"/goods/queryComments.do?id="+id,
+            toolbar:"#toolbar",
+            pagination:true,
+            pageList:[2, 10, 20, 50],
+            pageNumber:1,
+            pageSize:2,
+            sidePagination:'server',
+            striped:true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,
+            clickToSelect:true,
+            showToggle:true,
+            detailView: false,
+            queryParams:function(){
+                var comments=$("#comments").val();
+                var startTime=$("#startTime").val();
+                var endTime=$("#endTime").val();
+                return {
+                    page: this.pageNumber,
+                    rows: this.pageSize,
+                    comments:comments,
+                    startTime:startTime,
+                    endTime:endTime,
+                };
+            },
+
+            columns:[
+                {checkbox:true},
+                {field:'comments',title:'评论内容'},
+                {field:'commentsName',title:'评论人'},
+                {field:'commentsLevel',title:'评论等级',formatter:function(value,row,index){
+                    var level="";
+                    if (value==1){
+                        level="差"
+                    }
+                        if (value==2){
+                            level="一般"
+                        }
+                        if (value==3){
+                            level="好"
+                        }
+                        return level
+                    }
+    },
+                {field:'commentsStars',title:'评论星数量',formatter:function(value,row,index){
+                    var stars=""
+                        if (value==1){
+                            stars="★"
+                        }
+                        if (value==2){
+                            stars="★★"
+                        }
+                        if (value==3){
+                            stars="★★★"
+                        }
+                        if (value==4){
+                            stars="★★★★"
+                        }
+                        if (value==5){
+                            stars="★★★★★"
+                        }
+                        return stars;
+                }
+    },
+                {field:'commentDate',title:'评论时间'},
+
+            ]
+        })
+    }
+    function serche(){
+        $('#commentsTable').bootstrapTable('refresh');
+    }
+
+    $('.date').datetimepicker({
+        language: 'zh-CN',//显示中文
+        format: 'yyyy-mm-dd hh:ii:ss',//显示格式
+        minView: "month",//设置只显示到月份
+        initialDate: new Date(),//初始化当前日期
+        autoclose: true,//选中自动关闭
+        todayBtn: true//显示今日按钮
+    });
+</script>
+</html>

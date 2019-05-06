@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品评论系统</title>
+    <script src="/js/jquery-1.9.1.min.js"></script>
+    <script src="/bootstrap3/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/bootstrap3/css/bootstrap.css">
+
+    <link rel="stylesheet" href="/bootstrap-treeview/bootstrap-treeview.min.css">
+    <script src="/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+
+    <script src="/bootStrap-addTabs/bootstrap.addtabs.min.js"></script>
+    <link rel="stylesheet" href="/bootStrap-addTabs/bootstrap.addtabs.css">
+    <title>Insert title here</title>
+
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="">金科</a>
+
+        </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div id="myTree"></div>
+        </div>
+        <div class="col-md-10">
+            <div id="mytabs">
+                <ul class="nav nav-tabs" id="tablist">
+                    <li role="presentation" class="active">
+
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function(){
+        initTree();
+    })
+    //初始化树
+    function initTree(){
+        $.ajax({
+            url:"/goods/queryNav",
+            data:{},
+            dataType:"json",
+            success:function(data){
+
+                $('#myTree').treeview({
+                    data:data,
+                    onNodeSelected:function(event, node) {
+                        $.addtabs({iframeHeight: 650});
+                        if (node.seletetable) {
+                            $.addtabs.add({
+                                id:node.id,
+                                title:node.text,
+                                url:node.href,
+                            });
+                        }
+
+                    }
+
+                })
+
+
+
+
+
+
+
+
+
+            }
+        })
+    }
+
+</script>
+</html>
